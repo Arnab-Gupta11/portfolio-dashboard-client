@@ -17,12 +17,16 @@ import Loader from "@/components/shared/Loader/Loader";
 import { TBlog } from "@/types/blog.types";
 import imageUpload from "@/utils/imageUpload";
 import { Button } from "@/components/ui/button";
+import RichtextEdiror from "./rich-text-editor";
+import useRichTextEditor from "./rich-text-editor/useRichTextEditor";
 const UpdateBlog = ({ blogId }: { blogId: string }) => {
   const { data: blogData, isLoading } = useGetBlogDetailsQuery({ id: blogId });
 
   const [loading, setLoading] = useState(false);
+  // const [editorContent, setEditorContent] = useState<string>("");
   const router = useRouter();
   const [updateBlog] = useUpdateBlogMutation(undefined);
+  const editor = useRichTextEditor(blogData?.data?.content);
 
   const {
     register,
@@ -30,10 +34,18 @@ const UpdateBlog = ({ blogId }: { blogId: string }) => {
     watch,
     formState: { errors },
   } = useForm();
+
+  // Wait for data to load before proceeding
+  // useEffect(() => {
+  //   if (blogData?.data) {
+  //     setEditorContent(blogData?.data?.content || ""); // Set content when data is ready
+  //   }
+  // }, [blogData?.data]);
   if (isLoading) {
     return <Loader />;
   }
   const { _id, category, image, title, content } = blogData?.data as TBlog;
+
   const onSubmit = async (data: any) => {
     try {
       setLoading(true);
@@ -46,12 +58,12 @@ const UpdateBlog = ({ blogId }: { blogId: string }) => {
         title: data.title || title,
         image: imageData || image,
         category: data.category || category,
-        content: data.content || content,
+        content: editor?.getHTML() || content,
       };
       const res = await updateBlog({ id: _id, data: blogInfo }).unwrap();
       if (res?.success === true) {
         toast.success(res?.message);
-        router.push("/dashboard/blogs");
+        router.push("/blogs");
       }
     } catch (err: any) {
       toast.error(err?.data?.message);
@@ -65,16 +77,12 @@ const UpdateBlog = ({ blogId }: { blogId: string }) => {
       <div className="pt-10 px-4 bs:px-0">
         <div className="flex items-center justify-between mb-5 pt-8 md:px-14">
           <h2 className="text-base sm:text-lg bs:text-xl font-bold text-light-text-100 dark:text-dark-text-100 ">Update Blog</h2>
-          <Button onClick={() => router.push("/dashboard/blogs")}>
+          <Button onClick={() => router.push("/blogs")}>
             <IoMdArrowRoundBack />
           </Button>
         </div>
 
-        <form
-          className=" shadow-light-container-shadow dark:shadow-dark-container-shadow md:px-14   rounded-md pb-10"
-          onSubmit={handleSubmit(onSubmit)}
-          autoComplete="off"
-        >
+        <form className="md:px-14  rounded-md pb-10" onSubmit={handleSubmit(onSubmit)} autoComplete="off">
           {/* form row */}
           <div className="mb-3 md:mb-5">
             <div className="w-full">
@@ -124,18 +132,21 @@ const UpdateBlog = ({ blogId }: { blogId: string }) => {
 
           {/* form row */}
 
-          <div className=" mt-5">
-            <Label>Blog Content</Label>
-            <textarea
-              defaultValue={content}
-              className="w-full rounded-md border border-input bg-transparent px-3 py-1.5 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none  focus-visible:shadow-md disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:text-dark-secondary-txt text-light-secondary-txt mt-1.5 dark:border-[#1e232e] placeholder:text-muted-foreground  focus-visible:ring-1 focus-visible:ring-ring "
-              id=""
-              cols={30}
-              rows={8}
-              placeholder="Write your blog content...."
-              {...register("content", { required: true })}
-            />
-            {errors.content && <span className="text-red-600 text-xs font-medium mt-0 ml-1">Blog Content is required</span>}
+          <Label>Blog Content</Label>
+          <div className="p-2  mb-4">
+            {editor && (
+              <>
+                <RichtextEdiror editor={editor} />
+              </>
+            )}
+
+            {!editor && (
+              <div className="text-center">
+                <p className="text-base sm:text-md md:text-lg text-light-secondary-txt dark:text-dark-secondary-txt">
+                  Editor is loading, please wait...
+                </p>
+              </div>
+            )}
           </div>
 
           {/* button */}

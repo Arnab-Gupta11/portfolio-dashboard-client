@@ -1,5 +1,4 @@
-// hooks/useRichTextEditor.ts
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -11,7 +10,7 @@ import css from "highlight.js/lib/languages/css";
 import js from "highlight.js/lib/languages/javascript";
 import ts from "highlight.js/lib/languages/typescript";
 import html from "highlight.js/lib/languages/xml";
-// Create a lowlight instance with all languages loaded
+
 const lowlight = createLowlight(all);
 lowlight.register("html", html);
 lowlight.register("css", css);
@@ -47,9 +46,15 @@ const useRichTextEditor = (defaultContent: string | null) => {
           "h-[300px] rounded-md py-2 px-3 overflow-y-auto border focus:outline-none dark:border-[#1e232e] dark:text-white text-slate-950 shadow-md dark:shadow-slate-900",
       },
     },
-
     immediatelyRender: false,
   });
+
+  // Update the editor content whenever defaultContent changes
+  useEffect(() => {
+    if (editor && defaultContent) {
+      editor.commands.setContent(defaultContent);
+    }
+  }, [defaultContent, editor]);
 
   return editor;
 };

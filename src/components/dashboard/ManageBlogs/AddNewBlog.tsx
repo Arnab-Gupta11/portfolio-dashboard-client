@@ -15,7 +15,6 @@ import imageUpload from "@/utils/imageUpload";
 import { FiUpload } from "react-icons/fi";
 import useRichTextEditor from "@/components/dashboard/ManageBlogs/rich-text-editor/useRichTextEditor";
 import RichtextEdiror from "./rich-text-editor";
-import parse from "html-react-parser";
 import { BlogFormData } from "@/types/blog.types";
 const AddNewBlog = () => {
   const [loading, setLoading] = useState(false);
@@ -59,14 +58,18 @@ const AddNewBlog = () => {
     <div className="z-0">
       <div className="pt-10 px-4 bs:px-0">
         <div className="flex items-center justify-between mb-5 pt-8 md:px-14">
-          <h2 className="text-xl font-bold">Add New Blog</h2>
+          <h2 className="text-base sm:text-lg bs:text-xl font-bold text-light-text-100 dark:text-dark-text-100 ">Add New Blog</h2>
           <Button onClick={() => router.push("/blogs")}>
             {" "}
             <IoMdArrowRoundBack />{" "}
           </Button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          autoComplete="off"
+          className=" md:px-14  rounded-md pb-10"
+        >
           {/* form row */}
           <div className="mb-3 md:mb-5">
             <div className="w-full">
@@ -123,7 +126,9 @@ const AddNewBlog = () => {
 
             {!editor && (
               <div className="text-center">
-                <p className="text-lg text-gray-500">Editor is loading, please wait...</p>
+                <p className="text-base sm:text-md md:text-lg text-light-secondary-txt dark:text-dark-secondary-txt">
+                  Editor is loading, please wait...
+                </p>
               </div>
             )}
           </div>
@@ -132,7 +137,6 @@ const AddNewBlog = () => {
             {loading ? <BiLoaderCircle className="animate-spin" /> : "Add Blog"}
           </Button>
         </form>
-        <div className="tiptap">{parse(editor?.getHTML() || "")}</div>
       </div>
     </div>
   );

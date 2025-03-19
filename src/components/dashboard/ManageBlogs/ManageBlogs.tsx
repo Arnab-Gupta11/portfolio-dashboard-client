@@ -94,7 +94,7 @@ const ManageBlogs = () => {
                         side="bottom"
                         className="bg-[#f7fbfe] dark:bg-[#101624] border-none shadow-md shadow-secondary-bg-light outline-none p-2 flex flex-col gap-2"
                       >
-                        <Link href={`/dashboard/blogs/${item?._id}`}>
+                        <Link href={`/blogs/${item?._id}`}>
                           <span className="text-slate-700 hover:text-slate-900 dark:text-dark-primary-txt dark:hover:text-dark-secondary-txt ">
                             Update
                           </span>
