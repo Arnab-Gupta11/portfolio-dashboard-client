@@ -42,11 +42,29 @@ const ManageProjects = () => {
     });
   };
 
+  if (projectData?.data?.length === 0) {
+    return (
+      <div className="min-h-svh w-full flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-semibold text-light-primary-txt dark:text-dark-primary-txt">
+            It looks like you haven&apos;t added any project yet.
+          </h1>
+          <Link href="/projects/add-project">
+            <Button className="mt-5">
+              <Plus />
+              <span>Add Your First Project</span>
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="mb-5 flex flex-col xs:flex-row items-center xs:justify-between gap-5">
         <h1 className="text-2xl font-semibold text-light-primary-txt dark:text-dark-primary-txt">Manage Projects</h1>
-        <Link href="/dashboard/projects/add-project">
+        <Link href="/projects/add-project">
           <Button>
             <Plus />
             <span>Add Projects</span>
@@ -72,14 +90,14 @@ const ManageProjects = () => {
                 <tr key={item?._id} className="hover:bg-gray-50 dark:hover:bg-dark-bg-secondary">
                   <td className="px-4 py-2 border w-32  dark:border-[#1e232e] border-slate-200">
                     <Image
-                      src={item?.image}
+                      src={item?.thumbnail}
                       width={20}
                       height={20}
                       alt="Product Image"
                       className="w-16 h-16 bg-[#F7F7F7] dark:bg-[#101624] p-2 rounded-lg flex-shrink-0"
                     />
                   </td>
-                  <td className="px-4 py-2 border dark:border-[#1e232e] border-slate-200 text-sm">{item?.name}</td>
+                  <td className="px-4 py-2 border dark:border-[#1e232e] border-slate-200 text-sm">{item?.title}</td>
                   <td className="px-4 py-2 border  dark:border-[#1e232e] border-slate-200 text-sm">{item?.type}</td>
                   <td className="px-4 py-2 border  dark:border-[#1e232e] border-slate-200 text-sm">{item?.technologies}</td>
                   <td className="px-4 py-2 border w-20  dark:border-[#232935] border-slate-300">
@@ -91,7 +109,7 @@ const ManageProjects = () => {
                         side="bottom"
                         className="bg-[#f7fbfe] dark:bg-[#101624] border-none shadow-md shadow-secondary-bg-light outline-none p-2 flex flex-col gap-2"
                       >
-                        <Link href={`/dashboard/projects/${item?._id}`}>
+                        <Link href={`/projects/${item?._id}`}>
                           <span className="text-slate-700 hover:text-slate-900 dark:text-dark-primary-txt dark:hover:text-dark-secondary-txt ">
                             Update
                           </span>

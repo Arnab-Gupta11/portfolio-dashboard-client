@@ -45,6 +45,24 @@ const ManageBlogs = () => {
     });
   };
 
+  if (blogData?.data?.length === 0) {
+    return (
+      <div className="min-h-svh w-full flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-semibold text-light-primary-txt dark:text-dark-primary-txt">
+            It looks like you haven&apos;t created any blogs yet.
+          </h1>
+          <Link href="/blogs/add-blog">
+            <Button className="mt-5">
+              <Plus />
+              <span>Create Your First Blog</span>
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="mb-5 flex flex-col xs:flex-row items-center xs:justify-between gap-5">
