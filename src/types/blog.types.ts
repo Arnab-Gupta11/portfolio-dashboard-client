@@ -7,3 +7,8 @@ export type TBlog = {
   createdAt: string;
   updatedAt: string;
 };
+export interface BlogFormData {
+  title: string;
+  image: FileList; // Represents the file input
+  category: string;
+}

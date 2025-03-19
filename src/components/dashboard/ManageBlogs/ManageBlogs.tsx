@@ -49,7 +49,7 @@ const ManageBlogs = () => {
     <div>
       <div className="mb-5 flex flex-col xs:flex-row items-center xs:justify-between gap-5">
         <h1 className="text-2xl font-semibold text-light-primary-txt dark:text-dark-primary-txt">Manage Blogs</h1>
-        <Link href="/dashboard/blogs/add-blog">
+        <Link href="/blogs/add-blog">
           <Button>
             <Plus />
             <span>Add Blog</span>
