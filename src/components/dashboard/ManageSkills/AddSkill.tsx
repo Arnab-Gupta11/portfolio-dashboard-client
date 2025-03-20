@@ -37,7 +37,6 @@ const AddSkill = () => {
         progress: data.progress,
         category: data.category,
       };
-      console.log(skillInfo);
       const res = await addNewSkill(skillInfo).unwrap();
       if (res?.success) {
         toast.success(res?.message);

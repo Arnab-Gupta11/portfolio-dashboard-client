@@ -40,7 +40,6 @@ const UpdateSkill = ({ data }: { data: TSkills }) => {
         progress: formData.progress || data?.progress,
         category: formData.category || data?.category,
       };
-      console.log(skillInfo);
       const res = await updateSkill({ id: data?._id, data: skillInfo }).unwrap();
       if (res?.success) {
         toast.success(res?.message);

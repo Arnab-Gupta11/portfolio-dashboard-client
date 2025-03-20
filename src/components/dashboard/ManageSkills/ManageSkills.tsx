@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { BsThreeDots } from "react-icons/bs";
 
-import React from "react";
+import React, { useState } from "react";
 import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -15,35 +16,40 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/compon
 import { useDeleteProjectMutation, useGetAllProjectsQuery } from "@/redux/features/projects/project.api";
 import Loader from "@/components/shared/Loader/Loader";
 import { TProject } from "@/types/project.types";
-import { useGetAllSkillsQuery } from "@/redux/features/skills/skills.api";
+import { useDeleteSkillMutation, useGetAllSkillsQuery } from "@/redux/features/skills/skills.api";
 import { TSkills } from "@/types/skill.types";
 import AddSkill from "./AddSkill";
 import UpdateSkill from "./UpdateSkill";
+import toast from "react-hot-toast";
+import DeleteConfirmationModal from "../shared/DeleteConfirmationModal";
 const ManageSkills = () => {
   const { data: skillData, isLoading, isFetching } = useGetAllSkillsQuery([]);
-  const [deleteProject] = useDeleteProjectMutation(undefined);
+  const [deleteSkill] = useDeleteSkillMutation(undefined);
 
-  const handleDelete = (_id: string) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const res = await deleteProject({ id: _id }).unwrap();
-          if (res?.success === true) {
-            Swal.fire("Your Project has been Deleted!", "success");
-          }
-        } catch (error) {
-          Swal.fire("Error!", "Failed to delete project. Please try again later.", "error");
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+
+  const handleDelete = (data: TSkills) => {
+    setSelectedId(data?._id);
+    setSelectedItem(data?.label);
+    setModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      if (selectedId) {
+        const res = await deleteSkill(selectedId).unwrap();
+        if (res?.success) {
+          toast.success(res?.message);
+          setModalOpen(false);
+        } else {
+          toast.error(res?.message);
         }
       }
-    });
+    } catch (err: any) {
+      console.error(err?.message);
+    }
   };
 
   if (skillData?.data?.length === 0) {
@@ -103,9 +109,9 @@ const ManageSkills = () => {
                         side="bottom"
                         className="bg-[#f7fbfe] dark:bg-[#101624] border-none shadow-md shadow-secondary-bg-light outline-none p-2 flex flex-col gap-2"
                       >
-                        <UpdateSkill data={item}/>
+                        <UpdateSkill data={item} />
                         <span
-                          onClick={() => handleDelete(item?._id)}
+                          onClick={() => handleDelete(item)}
                           className="text-slate-700 hover:text-slate-900 hover:cursor-pointer dark:text-dark-primary-txt dark:hover:text-dark-secondary-txt "
                         >
                           Delete
@@ -117,6 +123,7 @@ const ManageSkills = () => {
               ))}
             </tbody>
           </table>
+          <DeleteConfirmationModal name={selectedItem} isOpen={isModalOpen} onOpenChange={setModalOpen} onConfirm={handleDeleteConfirm} />
         </div>
       )}
     </div>
