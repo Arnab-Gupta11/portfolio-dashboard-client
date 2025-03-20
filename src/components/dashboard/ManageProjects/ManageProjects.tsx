@@ -1,20 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { BsThreeDots } from "react-icons/bs";
-
 import React from "react";
 import { Plus } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import Swal from "sweetalert2";
-
 import Link from "next/link";
-
 import Image from "next/image";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useDeleteProjectMutation, useGetAllProjectsQuery } from "@/redux/features/projects/project.api";
 import Loader from "@/components/shared/Loader/Loader";
 import { TProject } from "@/types/project.types";
+
+import fallbackImg from "@/assets/fallback.png";
 const ManageProjects = () => {
   const { data: projectData, isLoading, isFetching } = useGetAllProjectsQuery([]);
   const [deleteProject] = useDeleteProjectMutation(undefined);
@@ -82,6 +80,7 @@ const ManageProjects = () => {
                 <th className="px-4 py-2 text-left border  dark:border-[#1e232e] border-slate-200">Name</th>
                 <th className="px-4 py-2 text-left border  dark:border-[#1e232e] border-slate-200">Type</th>
                 <th className="px-4 py-2 text-left border  dark:border-[#1e232e] border-slate-200">Technologies</th>
+                <th className="px-4 py-2 text-left border  dark:border-[#1e232e] border-slate-200">Featured</th>
                 <th className="px-4 py-2 text-left border dark:border-[#1e232e] border-slate-200">Action</th>
               </tr>
             </thead>
@@ -90,7 +89,7 @@ const ManageProjects = () => {
                 <tr key={item?._id} className="hover:bg-gray-50 dark:hover:bg-dark-bg-secondary">
                   <td className="px-4 py-2 border w-32  dark:border-[#1e232e] border-slate-200">
                     <Image
-                      src={item?.thumbnail}
+                      src={item?.thumbnail || fallbackImg}
                       width={20}
                       height={20}
                       alt="Product Image"
@@ -100,6 +99,18 @@ const ManageProjects = () => {
                   <td className="px-4 py-2 border dark:border-[#1e232e] border-slate-200 text-sm">{item?.title}</td>
                   <td className="px-4 py-2 border  dark:border-[#1e232e] border-slate-200 text-sm">{item?.type}</td>
                   <td className="px-4 py-2 border  dark:border-[#1e232e] border-slate-200 text-sm">{item?.technologies}</td>
+                  <td className="px-4 py-2 border  dark:border-[#1e232e] border-slate-200 text-sm">
+                    <span
+                      className={`px-2 py-1 rounded-md text-sm
+                          ${
+                            item?.isFeatured === true
+                              ? "bg-[#EDFBF3] text-[#71d057] border border-[#f5f4f4]"
+                              : "bg-[#eef2f8] dark:bg-[#101624] text-light-primary-txt dark:text-dark-secondary-txt border border-[#d1d2d5] dark:border-[#293553]"
+                          }`}
+                    >
+                      {item?.isFeatured === true ? "Featured" : "Regular"}
+                    </span>
+                  </td>
                   <td className="px-4 py-2 border w-20  dark:border-[#232935] border-slate-300">
                     <DropdownMenu>
                       <DropdownMenuTrigger className="outline-none hover:scale-105 active:scale-95 duration-700">
@@ -109,17 +120,21 @@ const ManageProjects = () => {
                         side="bottom"
                         className="bg-[#f7fbfe] dark:bg-[#101624] border-none shadow-md shadow-secondary-bg-light outline-none p-2 flex flex-col gap-2"
                       >
-                        <Link href={`/projects/${item?._id}`}>
-                          <span className="text-slate-700 hover:text-slate-900 dark:text-dark-primary-txt dark:hover:text-dark-secondary-txt ">
-                            Update
-                          </span>
-                        </Link>
+                        <span className="text-slate-700 hover:text-slate-900 dark:text-dark-primary-txt dark:hover:text-dark-secondary-txt border border-slate-300 dark:border-[#293553] px-2 rounded-md py-1 shadow-sm dark:dark:shadow-slate-800">
+                          <Link href={`/projects/${item?._id}`}>Update</Link>
+                        </span>
 
                         <span
                           onClick={() => handleDelete(item?._id)}
-                          className="text-slate-700 hover:text-slate-900 hover:cursor-pointer dark:text-dark-primary-txt dark:hover:text-dark-secondary-txt "
+                          className="text-slate-700 hover:text-slate-900 hover:cursor-pointer dark:text-dark-primary-txt dark:hover:text-dark-secondary-txt border border-slate-300 dark:border-[#293553] px-2 rounded-md py-1 shadow-sm dark:dark:shadow-slate-800"
                         >
                           Delete
+                        </span>
+                        <span
+                          onClick={() => handleDelete(item?._id)}
+                          className="text-slate-700 hover:text-slate-900 hover:cursor-pointer dark:text-dark-primary-txt dark:hover:text-dark-secondary-txt border border-slate-300 dark:border-[#293553] px-2 rounded-md py-1 shadow-sm dark:dark:shadow-slate-800"
+                        >
+                          {item?.isFeatured ? "Mark as Regular" : "Mark as Featured"}
                         </span>
                       </DropdownMenuContent>
                     </DropdownMenu>

@@ -53,7 +53,9 @@ const UpdateSkill = ({ data }: { data: TSkills }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <span className="text-slate-700 hover:text-slate-900 dark:text-dark-primary-txt dark:hover:text-dark-secondary-txt ">Update</span>
+        <span className="text-slate-700 hover:text-slate-900 dark:text-dark-primary-txt dark:hover:text-dark-secondary-txt border border-slate-300 dark:border-[#293553] px-2 rounded-md py-1 shadow-sm dark:dark:shadow-slate-800">
+          Update
+        </span>
       </DialogTrigger>
       <DialogContent className="max-w-[95%] xs:max-w-[425px] bg-[#F4F8FB] dark:bg-dark-bg-primary rounded-lg shadow-md ">
         <DialogHeader className=" text-left">

@@ -22,6 +22,14 @@ const skillsApi = baseApi.injectEndpoints({
       }),
       providesTags: ["SKILLS"],
     }),
+    //Get All Skills Options
+    getAllSkillsOptions: builder.query({
+      query: () => ({
+        url: "/skills/options",
+        method: "GET",
+      }),
+      providesTags: ["SKILLS"],
+    }),
     //Get Skills details
     getSkillDetails: builder.query({
       query: (id) => ({
@@ -50,4 +58,11 @@ const skillsApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useAddSkillMutation, useGetAllSkillsQuery, useGetSkillDetailsQuery, useDeleteSkillMutation, useUpdateSkillMutation } = skillsApi;
+export const {
+  useAddSkillMutation,
+  useGetAllSkillsQuery,
+  useGetSkillDetailsQuery,
+  useDeleteSkillMutation,
+  useUpdateSkillMutation,
+  useGetAllSkillsOptionsQuery,
+} = skillsApi;

@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 const imageUpload = async (img: any) => {
   const data = new FormData();
   data.append("file", img);
-  data.append("upload_preset", "stationaryApp_preset");
+  data.append("upload_preset", "arnabGuptaPortfolio_preset");
 
   try {
     const cloudName = "dgxvtrpmh";

@@ -13,12 +13,19 @@ import { useRouter } from "next/navigation";
 import { useAddNewProjectsMutation } from "@/redux/features/projects/project.api";
 import { TProjectFormData } from "@/types/project.types";
 import { useForm } from "react-hook-form";
+import { useGetAllSkillsOptionsQuery } from "@/redux/features/skills/skills.api";
+import { Loader } from "lucide-react";
+import { TSkills } from "@/types/skill.types";
 
 export const projetTypeOption = ["Website", "Mobile App", "Desktop App"];
 const AddNewProject = () => {
   const [loading, setLoading] = useState(false);
+  const [selectedCheckbox, setSelectedCheckbox] = useState<string[]>([]);
+  const [checkboxError, setCheckboxError] = useState<boolean>(false);
+  const [features, setFeatures] = useState([""]); // For dynamic features input
   const router = useRouter();
   const [addNewProject] = useAddNewProjectsMutation(undefined);
+  const { data: skillData, isLoading } = useGetAllSkillsOptionsQuery([]);
 
   const {
     register,
@@ -27,12 +34,10 @@ const AddNewProject = () => {
     formState: { errors },
   } = useForm<TProjectFormData>();
 
-  const [features, setFeatures] = useState([""]); // For dynamic features input
-
+  //Handle Dynamic feature field
   const handleAddFeature = () => {
     setFeatures([...features, ""]);
   };
-
   const handleRemoveFeature = (index: number) => {
     if (features.length > 1) {
       const newFeatures = features.filter((_, i) => i !== index);
@@ -45,8 +50,27 @@ const AddNewProject = () => {
     setFeatures(updatedFeatures);
   };
 
+  //Handle Technology checkbox
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setCheckboxError(false);
+    }
+    setSelectedCheckbox((prev) => {
+      if (checked) {
+        return [...prev, value];
+      } else {
+        return prev.filter((item) => item != value);
+      }
+    });
+  };
+
   const onSubmit = async (data: TProjectFormData) => {
     try {
+      if (selectedCheckbox.length === 0) {
+        setCheckboxError(true);
+        return;
+      }
       setLoading(true);
       let thumbnailUrl;
       let fullImageUrl;
@@ -70,6 +94,7 @@ const AddNewProject = () => {
         serverGithubLink: data.serverGithubLink,
         liveLink: data.liveLink,
         features: features,
+        skills: selectedCheckbox,
       };
       console.log(projectInfo);
       const res = await addNewProject(projectInfo).unwrap();
@@ -83,6 +108,10 @@ const AddNewProject = () => {
       setLoading(false);
     }
   };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="z-0">
@@ -239,6 +268,30 @@ const AddNewProject = () => {
                 className="mt-1.5 dark:border-[#1e232e] dark:text-dark-secondary-txt text-light-secondary-txt"
                 {...register("serverGithubLink")}
               />
+            </div>
+          </div>
+
+          <div className="mb-3 md:mb-5">
+            <Label>Select Technology.</Label>
+            <div className="flex items-center gap-5 flex-wrap mt-3">
+              {skillData?.data?.map((item: TSkills) => {
+                return (
+                  <div key={item?._id} className="relative flex items-center justify-center gap-1">
+                    <input
+                      type="checkbox"
+                      id={item?.label}
+                      value={item?._id}
+                      checked={selectedCheckbox.includes(item?._id)}
+                      onChange={handleCheckboxChange}
+                      className="peer relative h-3 w-3 rounded-sm shrink-0 appearance-none focus:outline-none bg-[#E3E3E3] checked:bg-primary checkbox-icon"
+                    />
+                    <label htmlFor={item?.label} className="w-full cursor-pointer font-base text-slate-500 peer-checked:text-slate-700 text-sm">
+                      {item?.label}
+                    </label>
+                  </div>
+                );
+              })}
+              {checkboxError && <span className="text-red-600 text-xs font-medium mt-0 ml-1">Select at least one skill to proceed.</span>}
             </div>
           </div>
 

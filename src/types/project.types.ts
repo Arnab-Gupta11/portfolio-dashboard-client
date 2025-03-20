@@ -1,8 +1,11 @@
+import { TSkills } from "./skill.types";
+
 export type TProject = {
   _id: string;
   title: string;
   description: string;
   features: string[];
+  skills: TSkills[];
   technologies: string;
   thumbnail: string;
   fullImage: string;

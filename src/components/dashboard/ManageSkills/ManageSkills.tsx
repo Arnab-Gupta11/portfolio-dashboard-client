@@ -112,7 +112,7 @@ const ManageSkills = () => {
                         <UpdateSkill data={item} />
                         <span
                           onClick={() => handleDelete(item)}
-                          className="text-slate-700 hover:text-slate-900 hover:cursor-pointer dark:text-dark-primary-txt dark:hover:text-dark-secondary-txt "
+                          className="text-slate-700 hover:text-slate-900 hover:cursor-pointer dark:text-dark-primary-txt dark:hover:text-dark-secondary-txt border border-slate-300 dark:border-[#293553] px-2 rounded-md py-1 shadow-sm dark:dark:shadow-slate-800"
                         >
                           Delete
                         </span>

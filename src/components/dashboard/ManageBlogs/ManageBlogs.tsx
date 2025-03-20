@@ -112,15 +112,13 @@ const ManageBlogs = () => {
                         side="bottom"
                         className="bg-[#f7fbfe] dark:bg-[#101624] border-none shadow-md shadow-secondary-bg-light outline-none p-2 flex flex-col gap-2"
                       >
-                        <Link href={`/blogs/${item?._id}`}>
-                          <span className="text-slate-700 hover:text-slate-900 dark:text-dark-primary-txt dark:hover:text-dark-secondary-txt ">
-                            Update
-                          </span>
-                        </Link>
+                        <span className="text-slate-700 hover:text-slate-900 dark:text-dark-primary-txt dark:hover:text-dark-secondary-txt border border-slate-300 dark:border-[#293553] px-2 rounded-md py-1 shadow-sm dark:dark:shadow-slate-800">
+                          <Link href={`/blogs/${item?._id}`}>Update</Link>
+                        </span>
 
                         <span
                           onClick={() => handleDelete(item?._id)}
-                          className="text-slate-700 hover:text-slate-900 hover:cursor-pointer dark:text-dark-primary-txt dark:hover:text-dark-secondary-txt "
+                          className="text-slate-700 hover:text-slate-900 hover:cursor-pointer dark:text-dark-primary-txt dark:hover:text-dark-secondary-txt border border-slate-300 dark:border-[#293553] px-2 rounded-md py-1 shadow-sm dark:dark:shadow-slate-800"
                         >
                           Delete
                         </span>
