@@ -56,6 +56,14 @@ const blogManagementApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["projects"],
     }),
+    // Update Project status
+    updateProjectsStatus: builder.mutation({
+      query: (id) => ({
+        url: `/projects/status/${id}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["projects"],
+    }),
 
     //Delete Product
     deleteProject: builder.mutation({
@@ -67,5 +75,11 @@ const blogManagementApi = baseApi.injectEndpoints({
     }),
   }),
 });
-export const { useGetAllProjectsQuery, useGetProjectsDetailsQuery, useAddNewProjectsMutation, useUpdateProjectsMutation, useDeleteProjectMutation } =
-  blogManagementApi;
+export const {
+  useGetAllProjectsQuery,
+  useGetProjectsDetailsQuery,
+  useAddNewProjectsMutation,
+  useUpdateProjectsMutation,
+  useDeleteProjectMutation,
+  useUpdateProjectsStatusMutation,
+} = blogManagementApi;

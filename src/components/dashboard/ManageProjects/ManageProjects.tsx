@@ -1,21 +1,26 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { BsThreeDots } from "react-icons/bs";
-import React from "react";
+import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Swal from "sweetalert2";
 import Link from "next/link";
 import Image from "next/image";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { useDeleteProjectMutation, useGetAllProjectsQuery } from "@/redux/features/projects/project.api";
+import { useDeleteProjectMutation, useGetAllProjectsQuery, useUpdateProjectsStatusMutation } from "@/redux/features/projects/project.api";
 import Loader from "@/components/shared/Loader/Loader";
 import { TProject } from "@/types/project.types";
 
 import fallbackImg from "@/assets/fallback.png";
+import toast from "react-hot-toast";
+import { BiLoaderCircle } from "react-icons/bi";
 const ManageProjects = () => {
+  const [loading, setLoading] = useState(false);
   const { data: projectData, isLoading, isFetching } = useGetAllProjectsQuery([]);
   const [deleteProject] = useDeleteProjectMutation(undefined);
+  const [updateStatus] = useUpdateProjectsStatusMutation(undefined);
 
   const handleDelete = (_id: string) => {
     Swal.fire({
@@ -38,6 +43,21 @@ const ManageProjects = () => {
         }
       }
     });
+  };
+
+  const handleStatusChange = async (_id: string) => {
+    try {
+      setLoading(true);
+      console.log(_id);
+      const res = await updateStatus(_id).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (projectData?.data?.length === 0) {
@@ -104,8 +124,8 @@ const ManageProjects = () => {
                       className={`px-2 py-1 rounded-md text-sm
                           ${
                             item?.isFeatured === true
-                              ? "bg-[#EDFBF3] text-[#71d057] border border-[#f5f4f4]"
-                              : "bg-[#eef2f8] dark:bg-[#101624] text-light-primary-txt dark:text-dark-secondary-txt border border-[#d1d2d5] dark:border-[#293553]"
+                              ? "bg-[#c7ffdf] dark:bg-[#76d29e] text-[#205615] border-2 border-[#64c950] dark:border-[#269010]"
+                              : "bg-[#eef2f8] dark:bg-[#101624] text-light-primary-txt dark:text-dark-secondary-txt border-2 border-[#d1d2d5] dark:border-[#293553]"
                           }`}
                     >
                       {item?.isFeatured === true ? "Featured" : "Regular"}
@@ -131,10 +151,10 @@ const ManageProjects = () => {
                           Delete
                         </span>
                         <span
-                          onClick={() => handleDelete(item?._id)}
+                          onClick={() => handleStatusChange(item?._id)}
                           className="text-slate-700 hover:text-slate-900 hover:cursor-pointer dark:text-dark-primary-txt dark:hover:text-dark-secondary-txt border border-slate-300 dark:border-[#293553] px-2 rounded-md py-1 shadow-sm dark:dark:shadow-slate-800"
                         >
-                          {item?.isFeatured ? "Mark as Regular" : "Mark as Featured"}
+                          {loading ? <BiLoaderCircle className="animate-spin" /> : item?.isFeatured ? "Mark as Regular" : "Mark as Featured"}
                         </span>
                       </DropdownMenuContent>
                     </DropdownMenu>
