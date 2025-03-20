@@ -15,8 +15,12 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/compon
 import { useDeleteProjectMutation, useGetAllProjectsQuery } from "@/redux/features/projects/project.api";
 import Loader from "@/components/shared/Loader/Loader";
 import { TProject } from "@/types/project.types";
+import { useGetAllSkillsQuery } from "@/redux/features/skills/skills.api";
+import { TSkills } from "@/types/skill.types";
+import AddSkill from "./AddSkill";
+import UpdateSkill from "./UpdateSkill";
 const ManageSkills = () => {
-  const { data: projectData, isLoading, isFetching } = useGetAllProjectsQuery([]);
+  const { data: skillData, isLoading, isFetching } = useGetAllSkillsQuery([]);
   const [deleteProject] = useDeleteProjectMutation(undefined);
 
   const handleDelete = (_id: string) => {
@@ -42,19 +46,14 @@ const ManageSkills = () => {
     });
   };
 
-  if (projectData?.data?.length === 0) {
+  if (skillData?.data?.length === 0) {
     return (
       <div className="min-h-svh w-full flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-semibold text-light-primary-txt dark:text-dark-primary-txt">
-            It looks like you haven&apos;t added any project yet.
+            It looks like you haven&apos;t added any skills yet.
           </h1>
-          <Link href="/projects/add-project">
-            <Button className="mt-5">
-              <Plus />
-              <span>Add Your First Project</span>
-            </Button>
-          </Link>
+          <AddSkill />
         </div>
       </div>
     );
@@ -63,13 +62,8 @@ const ManageSkills = () => {
   return (
     <div>
       <div className="mb-5 flex flex-col xs:flex-row items-center xs:justify-between gap-5">
-        <h1 className="text-2xl font-semibold text-light-primary-txt dark:text-dark-primary-txt">Manage Projects</h1>
-        <Link href="/projects/add-project">
-          <Button>
-            <Plus />
-            <span>Add Projects</span>
-          </Button>
-        </Link>
+        <h1 className="text-2xl font-semibold text-light-primary-txt dark:text-dark-primary-txt">Manage Skills</h1>
+        <AddSkill />
       </div>
       {isLoading || isFetching ? (
         <Loader />
@@ -78,28 +72,28 @@ const ManageSkills = () => {
           <table className="w-full border dark:border-[#1e232e] border-slate-200 mb-5 select-none -z-10">
             <thead className="bg-[#f2f9ff] dark:bg-[#101624]">
               <tr>
-                <th className="px-4 py-2 text-left border w-32  dark:border-[#1e232e] border-slate-200">Image</th>
+                <th className="px-4 py-2 text-left border w-32  dark:border-[#1e232e] border-slate-200">Icon</th>
                 <th className="px-4 py-2 text-left border  dark:border-[#1e232e] border-slate-200">Name</th>
-                <th className="px-4 py-2 text-left border  dark:border-[#1e232e] border-slate-200">Type</th>
-                <th className="px-4 py-2 text-left border  dark:border-[#1e232e] border-slate-200">Technologies</th>
+                <th className="px-4 py-2 text-left border  dark:border-[#1e232e] border-slate-200">category</th>
+                <th className="px-4 py-2 text-left border  dark:border-[#1e232e] border-slate-200">Progress</th>
                 <th className="px-4 py-2 text-left border dark:border-[#1e232e] border-slate-200">Action</th>
               </tr>
             </thead>
             <tbody>
-              {projectData?.data?.map((item: TProject) => (
+              {skillData?.data?.map((item: TSkills) => (
                 <tr key={item?._id} className="hover:bg-gray-50 dark:hover:bg-dark-bg-secondary">
                   <td className="px-4 py-2 border w-32  dark:border-[#1e232e] border-slate-200">
                     <Image
-                      src={item?.thumbnail}
+                      src={item?.icon}
                       width={20}
                       height={20}
-                      alt="Product Image"
+                      alt="Skill Icon"
                       className="w-16 h-16 bg-[#F7F7F7] dark:bg-[#101624] p-2 rounded-lg flex-shrink-0"
                     />
                   </td>
-                  <td className="px-4 py-2 border dark:border-[#1e232e] border-slate-200 text-sm">{item?.title}</td>
-                  <td className="px-4 py-2 border  dark:border-[#1e232e] border-slate-200 text-sm">{item?.type}</td>
-                  <td className="px-4 py-2 border  dark:border-[#1e232e] border-slate-200 text-sm">{item?.technologies}</td>
+                  <td className="px-4 py-2 border dark:border-[#1e232e] border-slate-200 text-sm">{item?.label}</td>
+                  <td className="px-4 py-2 border  dark:border-[#1e232e] border-slate-200 text-sm">{item?.category}</td>
+                  <td className="px-4 py-2 border  dark:border-[#1e232e] border-slate-200 text-sm">{item?.progress}%</td>
                   <td className="px-4 py-2 border w-20  dark:border-[#232935] border-slate-300">
                     <DropdownMenu>
                       <DropdownMenuTrigger className="outline-none hover:scale-105 active:scale-95 duration-700">
@@ -109,12 +103,7 @@ const ManageSkills = () => {
                         side="bottom"
                         className="bg-[#f7fbfe] dark:bg-[#101624] border-none shadow-md shadow-secondary-bg-light outline-none p-2 flex flex-col gap-2"
                       >
-                        <Link href={`/projects/${item?._id}`}>
-                          <span className="text-slate-700 hover:text-slate-900 dark:text-dark-primary-txt dark:hover:text-dark-secondary-txt ">
-                            Update
-                          </span>
-                        </Link>
-
+                        <UpdateSkill data={item}/>
                         <span
                           onClick={() => handleDelete(item?._id)}
                           className="text-slate-700 hover:text-slate-900 hover:cursor-pointer dark:text-dark-primary-txt dark:hover:text-dark-secondary-txt "

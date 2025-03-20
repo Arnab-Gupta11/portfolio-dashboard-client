@@ -3,7 +3,7 @@ import { baseApi } from "@/redux/api/baseApi";
 const skillsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     //Create skill
-    createSkill: builder.mutation({
+    addSkill: builder.mutation({
       query: (skillData) => {
         return {
           url: "/skills",
@@ -50,4 +50,4 @@ const skillsApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useCreateSkillMutation, useGetAllSkillsQuery, useGetSkillDetailsQuery, useDeleteSkillMutation, useUpdateSkillMutation } = skillsApi;
+export const { useAddSkillMutation, useGetAllSkillsQuery, useGetSkillDetailsQuery, useDeleteSkillMutation, useUpdateSkillMutation } = skillsApi;

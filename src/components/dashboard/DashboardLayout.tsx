@@ -13,16 +13,22 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const menuItems = [
     {
-      label: "Manage Blogs",
-      path: "/blogs",
+      label: "Manage Skills",
+      path: "/skills",
       show: true,
-      Icon: FaBlog, // 📝 Blog Icon
+      Icon: FaProjectDiagram, // 📁 Project Icon
     },
     {
       label: "Manage Projects",
       path: "/projects",
       show: true,
       Icon: FaProjectDiagram, // 📁 Project Icon
+    },
+    {
+      label: "Manage Blogs",
+      path: "/blogs",
+      show: true,
+      Icon: FaBlog, // 📝 Blog Icon
     },
     {
       label: "View Messages",
