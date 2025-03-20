@@ -4,7 +4,7 @@ import { TQueryParam, TResponseRedux } from "@/types/global";
 
 const blogManagementApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    //Get All Register semesters.
+    //Get All Blogs.
     getAllBlogs: builder.query({
       query: (args) => {
         const params = new URLSearchParams();
@@ -37,7 +37,7 @@ const blogManagementApi = baseApi.injectEndpoints({
       providesTags: ["blog"],
     }),
 
-    // Add new Product
+    // Add new Blog.
     addNewBlog: builder.mutation({
       query: (data) => ({
         url: "/blogs",
@@ -47,7 +47,7 @@ const blogManagementApi = baseApi.injectEndpoints({
       invalidatesTags: ["blog"],
     }),
 
-    // Update Registered Semester
+    // Update Blog.
     updateBlog: builder.mutation({
       query: (args) => ({
         url: `/blogs/${args.id}`,
@@ -57,7 +57,7 @@ const blogManagementApi = baseApi.injectEndpoints({
       invalidatesTags: ["blog"],
     }),
 
-    //Delete Product
+    //Delete Blog.
     deleteBlog: builder.mutation({
       query: (args) => ({
         url: `/blogs/${args.id}`,
